@@ -8,7 +8,7 @@ pub struct LexManager<'a> {
 }
 
 impl<'a> LexManager<'a> {
-    fn record(
+    pub fn record(
         &mut self,
         rec: impl Fn(&mut LexManager, &mut Recorder) -> ()
     ) -> String {
