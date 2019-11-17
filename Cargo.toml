@@ -1,5 +1,5 @@
 [package]
-name = "compiler-module"
+name = "compiler_module"
 version = "0.1.0"
 authors = ["Covrick <asdfsdev264@gmail.com>"]
 edition = "2018"
