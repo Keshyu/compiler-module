@@ -9,8 +9,6 @@ pub trait Lexer {
     type Token;
     type TokenType;
 
-    fn new(source: &str) -> Self;
-
     fn lex(
         &mut self,
         valid_tokens: Vec<Self::TokenType>,
