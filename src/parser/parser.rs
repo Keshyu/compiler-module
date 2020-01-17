@@ -9,7 +9,7 @@ pub struct Parser<'a, Node, TokenType> {
 
 impl<'a, Node, TokenType> Parser<'a, Node, TokenType>
 {
-    pub fn parse<Lexer>(&mut self, source_string: &'a str) -> Node
+    pub fn parse<Lexer>(&mut self, source_string: Box<str>) -> Node
     where
         Lexer: LexerTrait,
     {
