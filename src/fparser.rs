@@ -51,12 +51,6 @@ where
     }
 
     pub fn check_for(&mut self, token_type: TokenType) -> bool {
-        let check = self.lexer.lex(vec![token_type]).is_some();
-
-        if check {
-            self.lexer.pop_parsed_token();
-        }
-
-        check
+        self.lexer.lex(vec![token_type]).is_some()
     }
 }
