@@ -18,6 +18,10 @@ where
         }
     }
 
+    pub fn sequence_skip(&mut self, token_types: Vec<TokenType>) {
+        self.sequence(token_types, |_| ());
+    }
+
     pub fn sequence<Node>(
         &mut self,
         token_types: Vec<TokenType>,
