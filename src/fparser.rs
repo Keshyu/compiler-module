@@ -2,22 +2,20 @@ use crate::lexer::Lexer as LexerTrait;
 use std::str::Chars;
 use std::marker::PhantomData;
 
-pub struct Parser<'a, Lexer, Token, TokenType>
+pub struct Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
+    for<'a> Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
 {
     lexer: Lexer,
-    _m: PhantomData<&'a ()>
 }
 
-impl<'a, Lexer, Token, TokenType> Parser<'a, Lexer, Token, TokenType>
+impl<Lexer, Token, TokenType> Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
+    for<'a> Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
 {
-    pub fn new(source: Chars<'a>) -> Self {
+    pub fn new(source: Chars) -> Self {
         Parser {
             lexer: Lexer::new(source),
-            _m: PhantomData,
         }
     }
 
