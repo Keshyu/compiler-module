@@ -28,7 +28,7 @@ where
         let parsed_tokens = token_types.into_iter().map(|token_type| {
             self.lexer.lex(vec![token_type]).expect("Parse Error");
 
-            self.lexer.pop_parsed_token()
+            self.lexer.pop_parsed_token().expect("Parse Error")
         }).collect();
 
         parse(parsed_tokens)
@@ -43,7 +43,7 @@ where
     {
         self.lexer.lex(token_types).expect("Parse Error");
 
-        let parsed_token = self.lexer.pop_parsed_token();
+        let parsed_token = self.lexer.pop_parsed_token().expect("Parse Error");
 
         parse(parsed_token)
     }
