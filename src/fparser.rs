@@ -3,14 +3,14 @@ use std::str::Chars;
 
 pub struct Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<Token = Token, TokenType = TokenType>,
+    for<'a> Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
 {
     lexer: Lexer,
 }
 
 impl<Lexer, Token, TokenType> Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<Token = Token, TokenType = TokenType>,
+    for<'a> Lexer: LexerTrait<'a, Token = Token, TokenType = TokenType>,
 {
     pub fn new(source: Chars) -> Self {
         Parser {
