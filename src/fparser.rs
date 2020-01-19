@@ -1,16 +1,15 @@
 use crate::lexer::Lexer as LexerTrait;
 
-
 pub struct Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<Token = Token, TokenType = TokenType>
+    Lexer: LexerTrait<Token = Token, TokenType = TokenType>,
 {
     lexer: Lexer,
 }
 
 impl<Lexer, Token, TokenType> Parser<Lexer, Token, TokenType>
 where
-    Lexer: LexerTrait<Token = Token, TokenType = TokenType>
+    Lexer: LexerTrait<Token = Token, TokenType = TokenType>,
 {
     pub fn new(source_string: String) -> Self {
         Parser {
@@ -19,36 +18,35 @@ where
     }
 
     pub fn sequence_skip(&mut self, token_types: Vec<TokenType>) {
-        self.sequence(token_types, |_| ());
+        self.sequence(token_types, |_| {});
     }
 
-    pub fn sequence<Node>(
+    pub fn sequence(
         &mut self,
         token_types: Vec<TokenType>,
-        parse: impl Fn(Vec<Token>) -> Node
-    )
-        -> Node
-    {
-        let parsed_tokens = token_types.into_iter().map(|token_type| {
-            self.lexer.lex(vec![token_type]).expect("Parse Error");
+        parse: impl Fn(Vec<Token>),
+    ) {
+        let parsed_tokens = token_types
+            .into_iter()
+            .map(|token_type| {
+                self.lexer.lex(vec![token_type]).expect("Parse Error");
 
-            self.lexer.pop_parsed_token().expect("Parse Error")
-        }).collect();
+                self.lexer.pop_parsed_token().expect("Parse Error")
+            })
+            .collect();
 
-        parse(parsed_tokens)
+        parse(parsed_tokens);
     }
 
-    pub fn choice<Node>(
+    pub fn choice(
         &mut self,
         token_types: Vec<TokenType>,
-        parse: impl Fn(Token) -> Node,
-    )
-        -> Node
-    {
+        parse: impl Fn(Token),
+    ) {
         self.lexer.lex(token_types).expect("Parse Error");
 
         let parsed_token = self.lexer.pop_parsed_token().expect("Parse Error");
 
-        parse(parsed_token)
+        parse(parsed_token);
     }
 }
