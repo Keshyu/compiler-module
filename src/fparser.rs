@@ -24,7 +24,7 @@ where
     pub fn sequence(
         &mut self,
         token_types: Vec<TokenType>,
-        parse: impl Fn(Vec<Token>),
+        mut parse: impl FnMut(Vec<Token>),
     ) {
         let parsed_tokens = token_types
             .into_iter()
@@ -41,7 +41,7 @@ where
     pub fn choice(
         &mut self,
         token_types: Vec<TokenType>,
-        parse: impl Fn(Token),
+        mut parse: impl FnMut(Token),
     ) {
         self.lexer.lex(token_types).expect("Parse Error");
 
