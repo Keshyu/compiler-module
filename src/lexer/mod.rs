@@ -1,3 +1,5 @@
+use std::str::Chars;
+
 mod lex_manager;
 mod recorder;
 
@@ -8,7 +10,7 @@ pub trait Lexer {
     type Token;
     type TokenType;
 
-    fn new(source: Box<str>) -> Self;
+    fn new(source: Chars) -> Self;
 
     fn lex(&mut self, valid_tokens: Vec<Self::TokenType>) -> Option<Self::TokenType>;
 
