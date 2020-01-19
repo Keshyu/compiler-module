@@ -6,11 +6,11 @@ mod recorder;
 pub use lex_manager::LexManager;
 pub use recorder::Recorder;
 
-pub trait Lexer<'a> {
+pub trait Lexer {
     type Token;
     type TokenType;
 
-    fn new(source: Chars<'a>) -> Self;
+    fn new<'a>(source: Chars<'a>) -> Self;
 
     fn lex(&mut self, valid_tokens: Vec<Self::TokenType>) -> Option<Self::TokenType>;
 
