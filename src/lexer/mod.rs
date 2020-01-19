@@ -12,5 +12,5 @@ pub trait Lexer {
 
     fn lex(&mut self, valid_tokens: Vec<Self::TokenType>) -> Option<Self::TokenType>;
 
-    fn pop_parsed_token(&mut self) -> Self::Token;
+    fn pop_parsed_token(&mut self) -> Option<Self::Token>;
 }
