@@ -1,13 +1,13 @@
-use std::str::Chars;
+use std::vec::IntoIter;
 use super::recorder::Recorder;
 
 
-pub struct LexManager<'a> {
-    pub source: Chars<'a>,
+pub struct LexManager {
+    pub source: IntoIter<char>,
     pub lookahead: Option<char>,
 }
 
-impl<'a> LexManager<'a> {
+impl LexManager {
     pub fn record(
         &mut self,
         rec: impl Fn(&mut LexManager, &mut Recorder) -> ()

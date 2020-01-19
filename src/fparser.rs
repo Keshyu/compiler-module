@@ -1,5 +1,5 @@
 use crate::lexer::Lexer as LexerTrait;
-use std::str::Chars;
+use std::vec::IntoIter;
 
 pub struct Parser<Lexer, Token, TokenType>
 where
@@ -12,7 +12,7 @@ impl<Lexer, Token, TokenType> Parser<Lexer, Token, TokenType>
 where
     Lexer: LexerTrait<Token = Token, TokenType = TokenType>,
 {
-    pub fn new<'a>(source: Chars<'a>) -> Self {
+    pub fn new(source: IntoIter<char>) -> Self {
         Parser {
             lexer: Lexer::new(source),
         }
