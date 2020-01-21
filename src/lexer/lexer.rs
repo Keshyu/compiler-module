@@ -12,7 +12,6 @@ where
 {
     manager: LexManager,
     tokenizer: Tokenizer,
-    parsed_token: Option<Token>,
 }
 
 impl<Tokenizer, Token, TokenType> Lexer<Tokenizer, Token, TokenType>
@@ -28,7 +27,6 @@ where
                 source: source,
             },
             tokenizer: Tokenizer::new(),
-            parsed_token: None,
         }
     }
 
@@ -42,23 +40,17 @@ where
     pub fn lex_one(&mut self, token_type: TokenType) -> Token {
         let error_message = format!("Parse Error: Expected: {:?}", token_type);
 
-        self.lex(vec![token_type]).expect(error_message.as_str());
-
-        self.parsed_token().unwrap()
+        self.lex(vec![token_type]).expect(error_message.as_str())
     }
 
-    pub fn lex_either(&mut self, token_types: Vec<TokenType>) -> TokenType {
+    pub fn lex_either(&mut self, token_types: Vec<TokenType>) -> Token {
         let error_message =
             format!("Parse Error: Expected one of these: {:?}", token_types);
 
         self.lex(token_types).expect(error_message.as_str())
     }
 
-    pub fn parsed_token(&mut self) -> Option<Token> {
-        self.parsed_token.take()
-    }
-
-    fn lex(&mut self, valid_tokens: Vec<TokenType>) -> Option<TokenType> {
+    fn lex(&mut self, valid_tokens: Vec<TokenType>) -> Option<Token> {
         let parsed_token = self.tokenizer.tokenize(valid_tokens.clone(), &mut self.manager);
 
         parsed_token.map(|token| {
@@ -68,13 +60,7 @@ where
                 panic!("Parse Error: Expected {:?} but found {:?}", valid_tokens, r#type);
             }
 
-            self.save_parsed_token(token);
-
-            r#type
+            token
         })
-    }
-
-    fn save_parsed_token(&mut self, token: Token) {
-        self.parsed_token = Some(token);
     }
 }
