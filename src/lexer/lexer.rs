@@ -4,20 +4,22 @@ use crate::token::Token as TokenTrait;
 use std::fmt::Debug;
 use std::vec::IntoIter;
 
-pub struct Lexer<Tokenizer, Token, TokenType: Debug>
+pub struct Lexer<Tokenizer, Token, TokenType>
 where
     Tokenizer: TokenizerTrait<Token = Token, TokenType = TokenType>,
     Token: TokenTrait<Type = TokenType>,
+    TokenType: Debug + Clone + Eq,
 {
     manager: LexManager,
     tokenizer: Tokenizer,
     parsed_token: Option<Token>,
 }
 
-impl<Tokenizer, Token, TokenType: Debug> Lexer<Tokenizer, Token, TokenType>
+impl<Tokenizer, Token, TokenType> Lexer<Tokenizer, Token, TokenType>
 where
     Tokenizer: TokenizerTrait<Token = Token, TokenType = TokenType>,
     Token: TokenTrait<Type = TokenType>,
+    TokenType: Debug + Clone + Eq,
 {
     pub fn new(mut source: IntoIter<char>) -> Self {
         Lexer {
@@ -57,10 +59,14 @@ where
     }
 
     fn lex(&mut self, valid_tokens: Vec<TokenType>) -> Option<TokenType> {
-        let parsed_token = self.tokenizer.tokenize(valid_tokens, &mut self.manager);
+        let parsed_token = self.tokenizer.tokenize(valid_tokens.clone(), &mut self.manager);
 
         parsed_token.map(|token| {
             let r#type = token.r#type();
+
+            if !valid_tokens.contains(&r#type) {
+                panic!("Parse Error: Expected {:?} but found {:?}", valid_tokens, r#type);
+            }
 
             self.save_parsed_token(token);
 
