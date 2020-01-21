@@ -1,9 +1,10 @@
 use super::lex_manager::LexManager;
 use super::tokenizer::Tokenizer as TokenizerTrait;
 use crate::token::Token as TokenTrait;
+use std::fmt::Debug;
 use std::vec::IntoIter;
 
-pub struct Lexer<Tokenizer, Token, TokenType>
+pub struct Lexer<Tokenizer, Token, TokenType: Debug>
 where
     Tokenizer: TokenizerTrait<Token = Token, TokenType = TokenType>,
     Token: TokenTrait<Type = TokenType>,
@@ -13,7 +14,7 @@ where
     parsed_token: Option<Token>,
 }
 
-impl<Tokenizer, Token, TokenType> Lexer<Tokenizer, Token, TokenType>
+impl<Tokenizer, Token, TokenType: Debug> Lexer<Tokenizer, Token, TokenType>
 where
     Tokenizer: TokenizerTrait<Token = Token, TokenType = TokenType>,
     Token: TokenTrait<Type = TokenType>,
@@ -32,19 +33,23 @@ where
     pub fn lex_all(&mut self, token_types: Vec<TokenType>) -> Vec<Token> {
         token_types
             .into_iter()
-            .map(|token_type| {
-                self.lex_one(token_type)
-            })
+            .map(|token_type| self.lex_one(token_type))
             .collect()
     }
 
     pub fn lex_one(&mut self, token_type: TokenType) -> Token {
-        self.lex(vec![token_type]).expect("Parse Error");
+        let error_message = format!("Parse Error: Expected: {:?}", token_type);
+
+        self.lex(vec![token_type]).expect(error_message.as_str());
+
         self.parsed_token().unwrap()
     }
 
     pub fn lex_either(&mut self, token_types: Vec<TokenType>) -> TokenType {
-        self.lex(token_types).expect("Parse Error")
+        let error_message =
+            format!("Parse Error: Expected one of these: {:?}", token_types);
+
+        self.lex(token_types).expect(error_message.as_str())
     }
 
     pub fn parsed_token(&mut self) -> Option<Token> {
