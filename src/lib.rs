@@ -1,3 +1,4 @@
 pub mod lexer;
-// pub mod fparser;
+pub mod manual_parser;
 pub mod token;
+pub mod parser;
